@@ -83,7 +83,7 @@ class PythonCallback(oneflow_api.ForeignCallback):
         try:
             # TODO(hanbinbin): str() will be removed after proto obj is replaced with cfg obj in python side
             return interpreter_callback.MakeScopeSymbol(
-                str(job_conf), str(parallel_conf), is_mirrored
+                job_conf, str(parallel_conf), is_mirrored
             )
         except Exception as e:
             print(traceback.format_exc())
