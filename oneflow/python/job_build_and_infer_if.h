@@ -39,12 +39,6 @@ void CurJobBuildAndInferCtx_CheckJob(std::string* error_str) {
   return oneflow::CurJobBuildAndInferCtx_CheckJob().GetDataAndSerializedErrorProto(error_str);
 }
 
-void CurJobBuildAndInferCtx_SetJobConf(const std::string& serialized_job_conf,
-                                       std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_SetJobConf(serialized_job_conf)
-      .GetDataAndSerializedErrorProto(error_str);
-}
-
 void CurJobBuildAndInferCtx_SetTrainConf(const std::string& serialized_train_conf,
                                          std::string* error_str) {
   return oneflow::CurJobBuildAndInferCtx_SetTrainConf(serialized_train_conf)
@@ -187,12 +181,5 @@ std::string JobBuildAndInferCtx_MirroredBlobGetBatchAxis(const std::string& job_
 std::string JobBuildAndInferCtx_MirroredBlobGetSplitAxisFromProducerView(
     const std::string& job_name, const std::string& lbn, std::string* error_str) {
   return oneflow::JobBuildAndInferCtx_MirroredBlobGetSplitAxisFromProducerView(job_name, lbn)
-      .GetDataAndSerializedErrorProto(error_str, std::string(""));
-}
-
-std::string JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(
-    const std::string& job_name, const std::string& lbn, std::string* error_str) {
-  return oneflow::JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(
-             job_name, lbn)
       .GetDataAndSerializedErrorProto(error_str, std::string(""));
 }

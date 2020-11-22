@@ -206,14 +206,6 @@ Maybe<void> LaunchJob(const std::shared_ptr<oneflow::ForeignJobInstance>& cb) {
   return Maybe<void>::Ok();
 }
 
-Maybe<std::string> GetSerializedMachineId2DeviceIdListOFRecord(
-    const std::string& parallel_conf_str) {
-  ParallelConf parallel_conf;
-  CHECK_OR_RETURN(TxtString2PbMessage(parallel_conf_str, &parallel_conf))
-      << "parallel conf parse failed";
-  return PbMessage2TxtString(*JUST(ParseMachineAndDeviceIdList(parallel_conf)));
-}
-
 Maybe<void> CacheInt8Calibration() {
 #ifdef WITH_TENSORRT
   xrt::tensorrt::CacheInt8Calibration();

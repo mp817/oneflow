@@ -32,6 +32,7 @@ from oneflow.core.framework.config_def_pb2 import ConfigDef
 from oneflow.core.job.inter_user_job_info_pb2 import InterUserJobInfo
 from oneflow.python.framework.job_build_and_infer_error import JobBuildAndInferError
 import oneflow
+import oneflow_api.oneflow.core.common.error as error_cfg
 
 oneflow_api = oneflow.oneflow_api
 
@@ -174,10 +175,10 @@ def JobBuildAndInferCtx_Close():
 
 def CurJobBuildAndInferCtx_SetJobConf(job_config_proto):
     serialized_job_conf = str(job_config_proto)
-    error_str = oneflow_internal.CurJobBuildAndInferCtx_SetJobConf(serialized_job_conf)
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    error = oneflow_api.CurJobBuildAndInferCtx_SetJobConf(serialized_job_conf)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
+
 
 
 def CurJobBuildAndInferCtx_SetTrainConf(train_config_proto):
@@ -435,12 +436,11 @@ def JobBuildAndInferCtx_MirroredBlobGetParallelConfFromProducerView(job_name, lb
     job_name = str(job_name)
     lbn = str(lbn)
     GetParallelConf = (
-        oneflow_internal.JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView
+        oneflow_api.JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView
     )
-    parallel_conf_str, error_str = GetParallelConf(job_name, lbn)
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    parallel_conf_str, error = GetParallelConf(job_name, lbn)
+    if error.error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
     return text_format.Parse(parallel_conf_str, placement_pb.ParallelConf())
 
 
@@ -535,12 +535,11 @@ def JobBuildAndInferCtx_GetParallelConfFromProducerView(job_name, lbn):
     job_name = str(job_name)
     lbn = str(lbn)
     GetParallelConf = (
-        oneflow_internal.JobBuildAndInferCtx_GetSerializedParallelConfFromProducerView
+        oneflow_api.JobBuildAndInferCtx_GetSerializedParallelConfFromProducerView
     )
-    parallel_conf, error_str = GetParallelConf(job_name, lbn)
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    parallel_conf, error = GetParallelConf(job_name, lbn)
+    if error.error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
     return text_format.Parse(parallel_conf, placement_pb.ParallelConf())
 
 
@@ -548,13 +547,12 @@ def GetMachine2DeviceIdListOFRecordFromParallelConf(parallel_conf):
     serialized_parallel_conf = str(text_format.MessageToString(parallel_conf))
     (
         ofrecord,
-        error_str,
-    ) = oneflow_internal.GetMachine2DeviceIdListOFRecordFromParallelConf(
+        error,
+    ) = oneflow_api.GetMachine2DeviceIdListOFRecordFromParallelConf(
         serialized_parallel_conf
     )
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    if error.error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
     return text_format.Parse(ofrecord, record_util.OFRecord())
 
 

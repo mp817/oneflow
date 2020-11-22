@@ -66,13 +66,6 @@ Maybe<void> JobBuildAndInferCtx_Close() {
 
 Maybe<void> CurJobBuildAndInferCtx_CheckJob() { return JUST(GetCurInferCtx())->CheckJob(); }
 
-Maybe<void> CurJobBuildAndInferCtx_SetJobConf(const std::string& serialized_job_conf) {
-  // parse
-  JobConfigProto job_conf;
-  CHECK_OR_RETURN(TxtString2PbMessage(serialized_job_conf, &job_conf)) << "job conf parse failed";
-  return JUST(GetCurInferCtx())->SetJobConf(job_conf);
-}
-
 Maybe<void> CurJobBuildAndInferCtx_SetTrainConf(const std::string& train_conf_str) {
   TrainConf train_conf;
   CHECK_OR_RETURN(TxtString2PbMessage(train_conf_str, &train_conf)) << "train conf parse failed";
@@ -215,13 +208,6 @@ Maybe<std::string> JobBuildAndInferCtx_MirroredBlobGetSplitAxisFromProducerView(
     const std::string& job_name, const std::string& lbn) {
   auto* ctx = JUST(GetJobBuildAndInferCtx(job_name));
   return PbMessage2TxtString(*JUST(ctx->MirroredBlobGetSplitAxisFromProducerView(lbn)));
-}
-
-Maybe<std::string> JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(
-    const std::string& job_name, const std::string& lbn) {
-  auto* ctx = JUST(GetJobBuildAndInferCtx(job_name));
-  return PbMessage2TxtString(
-      JUST(ctx->MirroredBlobGetParallelDescFromProducerView(lbn))->parallel_conf());
 }
 
 }  // namespace oneflow
