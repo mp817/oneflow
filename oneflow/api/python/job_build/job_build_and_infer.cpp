@@ -21,7 +21,6 @@ limitations under the License.
 namespace py = pybind11;
 
 ONEFLOW_API_PYBIND11_MODULE("", m) {
-  using namespace oneflow;
   m.def("CurJobBuildAndInferCtx_SetJobConf", &CurJobBuildAndInferCtx_SetJobConf, py::call_guard<py::gil_scoped_release>());
   m.def("JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView", &JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView, py::call_guard<py::gil_scoped_release>());
   m.def("GetMachine2DeviceIdListOFRecordFromParallelConf", &GetMachine2DeviceIdListOFRecordFromParallelConf, py::call_guard<py::gil_scoped_release>());

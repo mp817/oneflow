@@ -70,7 +70,6 @@ class Error final {
   static Error GradientFunctionNotFound();
 
   std::shared_ptr<cfg::ErrorProto> error_proto() const { return error_proto_; }
-  cfg::ErrorProto* operator->() const { return error_proto_.get(); }
   const cfg::ErrorProto* operator->() const { return error_proto_.get(); }
   cfg::ErrorProto* operator->() { return error_proto_.get(); }
   operator std::string() const;

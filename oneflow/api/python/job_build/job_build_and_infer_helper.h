@@ -16,10 +16,11 @@ limitations under the License.
 #ifndef ONEFLOW_API_PYTHON_JOB_BUILD_JOB_BUILD_AND_INFER_HELPER_H_
 #define ONEFLOW_API_PYTHON_JOB_BUILD_JOB_BUILD_AND_INFER_HELPER_H_
 
+#include "oneflow/core/job/global_for.h"
 #include "oneflow/core/job/job_build_and_infer_ctx.h"
 #include "oneflow/core/job/job_build_and_infer_ctx_mgr.h"
-#include "oneflow/core/job/job.pb.h
-#include "oneflow/core/job/job.cfg.h
+#include "oneflow/core/job/job_conf.cfg.h"
+#include "oneflow/core/job/job_conf.pb.h"
 #include "oneflow/core/job/placement.pb.h"
 #include "oneflow/core/job/placement.cfg.h"
 
@@ -50,9 +51,10 @@ Maybe<JobBuildAndInferCtx*> GetCurInferCtx() {
 } // namespace
 
 
-Maybe<void> CurJobBuildAndInferCtx_SetJobConf(const std::shared_ptr<cfg::JobConfigProto>& cfg_job_conf) {
+Maybe<void> CurJobBuildAndInferCtx_SetJobConf(const std::string& serialized_job_conf) {
+  // parse
   JobConfigProto job_conf;
-  cfg_job_conf->ToProto(&job_conf);
+  CHECK_OR_RETURN(TxtString2PbMessage(serialized_job_conf, &job_conf)) << "job conf parse failed";
   return JUST(GetCurInferCtx())->SetJobConf(job_conf);
 }
 
@@ -64,9 +66,10 @@ Maybe<std::string> JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFrom
 }
 
 Maybe<std::string> GetSerializedMachineId2DeviceIdListOFRecord(
-    const std::shared_ptr<cfg::ParallelConf>& cfg_parallel_conf) {
+    const std::string& parallel_conf_str) {
   ParallelConf parallel_conf;
-  cfg_parallel_conf->ToProto(&parallel_conf);
+  CHECK_OR_RETURN(TxtString2PbMessage(parallel_conf_str, &parallel_conf))
+      << "parallel conf parse failed";
   return PbMessage2TxtString(*JUST(ParseMachineAndDeviceIdList(parallel_conf)));
 }
 
