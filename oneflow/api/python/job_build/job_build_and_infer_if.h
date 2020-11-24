@@ -23,18 +23,63 @@ limitations under the License.
 #include "oneflow/core/job/placement.cfg.h"
 #include "oneflow/api/python/job_build/job_build_and_infer_helper.h"
 
+std::shared_ptr<oneflow::cfg::ErrorProto> JobBuildAndInferCtx_Open(const std::string& job_name) {
+  return oneflow::JobBuildAndInferCtx_Open(job_name).GetDataAndErrorProto();
+}
 
-std::shared_ptr<oneflow::cfg::ErrorProto> CurJobBuildAndInferCtx_SetJobConf(const std::string& serialized_job_conf) {
+std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>>
+JobBuildAndInferCtx_GetCurrentJobName() {
+  return oneflow::JobBuildAndInferCtx_GetCurrentJobName().GetDataAndErrorProto(std::string(""));
+}
+
+std::shared_ptr<oneflow::cfg::ErrorProto> JobBuildAndInferCtx_Close() {
+  return oneflow::JobBuildAndInferCtx_Close().GetDataAndErrorProto();
+}
+
+std::shared_ptr<oneflow::cfg::ErrorProto> CurJobBuildAndInferCtx_CheckJob() {
+  return oneflow::CurJobBuildAndInferCtx_CheckJob().GetDataAndErrorProto();
+}
+
+std::shared_ptr<oneflow::cfg::ErrorProto> CurJobBuildAndInferCtx_SetJobConf(
+    const std::string& serialized_job_conf) {
   return oneflow::CurJobBuildAndInferCtx_SetJobConf(serialized_job_conf).GetDataAndErrorProto();
 }
 
-std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>> JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(
-    const std::string& job_name, const std::string& lbn) {
-  return oneflow::JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(job_name, lbn).GetDataAndErrorProto(std::string(""));
+std::shared_ptr<oneflow::cfg::ErrorProto> CurJobBuildAndInferCtx_SetTrainConf(
+    const std::string& serialized_train_conf) {
+  return oneflow::CurJobBuildAndInferCtx_SetTrainConf(serialized_train_conf).GetDataAndErrorProto();
 }
 
-std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>> GetMachine2DeviceIdListOFRecordFromParallelConf(const std::string& parallel_conf) {
-  return oneflow::GetSerializedMachineId2DeviceIdListOFRecord(parallel_conf)
+std::shared_ptr<oneflow::cfg::ErrorProto> CurJobBuildAndInferCtx_Complete() {
+  return oneflow::CurJobBuildAndInferCtx_Complete().GetDataAndErrorProto();
+}
+
+std::pair<bool, std::shared_ptr<oneflow::cfg::ErrorProto>> CurJobBuildAndInferCtx_HasJobConf() {
+  return oneflow::CurJobBuildAndInferCtx_HasJobConf().GetDataAndErrorProto(false);
+}
+
+std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>>
+CurJobBuildAndInferCtx_AddAndInferMirroredOp(const std::string& serialized_op_conf) {
+  return oneflow::CurJobBuildAndInferCtx_AddAndInferMirroredOp(serialized_op_conf)
       .GetDataAndErrorProto(std::string(""));
 }
 
+std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>>
+CurJobBuildAndInferCtx_AddAndInferConsistentOp(const std::string& serialized_op_conf) {
+  return oneflow::CurJobBuildAndInferCtx_AddAndInferConsistentOp(serialized_op_conf)
+      .GetDataAndErrorProto(std::string(""));
+}
+
+std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>>
+JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(
+    const std::string& job_name, const std::string& lbn) {
+  return oneflow::JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView(
+             job_name, lbn)
+      .GetDataAndErrorProto(std::string(""));
+}
+
+std::pair<std::string, std::shared_ptr<oneflow::cfg::ErrorProto>>
+GetMachine2DeviceIdListOFRecordFromParallelConf(const std::string& parallel_conf) {
+  return oneflow::GetSerializedMachineId2DeviceIdListOFRecord(parallel_conf)
+      .GetDataAndErrorProto(std::string(""));
+}

@@ -48,50 +48,6 @@ Maybe<JobBuildAndInferCtx*> GetCurInferCtx() {
 
 }  // namespace
 
-Maybe<void> JobBuildAndInferCtx_Open(const std::string& job_name) {
-  auto* mgr = JUST(GlobalJobBuildAndInferCtxMgr());
-  return mgr->OpenJobBuildAndInferCtx(job_name);
-}
-
-Maybe<std::string> JobBuildAndInferCtx_GetCurrentJobName() {
-  auto* mgr = JUST(GlobalJobBuildAndInferCtxMgr());
-  return mgr->GetCurrentJobName();
-}
-
-Maybe<void> JobBuildAndInferCtx_Close() {
-  auto* mgr = JUST(GlobalJobBuildAndInferCtxMgr());
-  JUST(mgr->CloseCurrentJobBuildAndInferCtx());
-  return Maybe<void>::Ok();
-}
-
-Maybe<void> CurJobBuildAndInferCtx_CheckJob() { return JUST(GetCurInferCtx())->CheckJob(); }
-
-Maybe<void> CurJobBuildAndInferCtx_SetTrainConf(const std::string& train_conf_str) {
-  TrainConf train_conf;
-  CHECK_OR_RETURN(TxtString2PbMessage(train_conf_str, &train_conf)) << "train conf parse failed";
-  return JUST(GetCurInferCtx())->SetTrainConf(train_conf);
-}
-
-Maybe<void> CurJobBuildAndInferCtx_Complete() { return JUST(GetCurInferCtx())->Complete(); }
-
-Maybe<bool> CurJobBuildAndInferCtx_HasJobConf() { return JUST(GetCurInferCtx())->HasJobConf(); }
-
-Maybe<std::string> CurJobBuildAndInferCtx_AddAndInferMirroredOp(const std::string& op_conf_str) {
-  OperatorConf op_conf;
-  CHECK_OR_RETURN(TxtString2PbMessage(op_conf_str, &op_conf)) << "operator conf parse failed";
-  auto* ctx = JUST(GetCurInferCtx());
-  const auto& op_attribute = JUST(ctx->AddAndInferMirroredOp(op_conf));
-  return PbMessage2TxtString(*op_attribute);
-}
-
-Maybe<std::string> CurJobBuildAndInferCtx_AddAndInferConsistentOp(const std::string& op_conf_str) {
-  OperatorConf op_conf;
-  CHECK_OR_RETURN(TxtString2PbMessage(op_conf_str, &op_conf)) << "operator conf parse failed";
-  auto* ctx = JUST(GetCurInferCtx());
-  const auto& op_attribute = JUST(ctx->AddAndInferConsistentOp(op_conf));
-  return PbMessage2TxtString(*op_attribute);
-}
-
 Maybe<void> CurJobBuildAndInferCtx_AddLbiAndDiffWatcherUuidPair(
     const std::string& lbi_uuid_pair_str) {
   auto* ctx = JUST(GetCurInferCtx());

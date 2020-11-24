@@ -22,50 +22,6 @@ limitations under the License.
 #include "oneflow/core/operator/op_conf.pb.h"
 #include "oneflow/python/job_build_and_infer_helper.h"
 
-void JobBuildAndInferCtx_Open(const std::string& job_name, std::string* error_str) {
-  return oneflow::JobBuildAndInferCtx_Open(job_name).GetDataAndSerializedErrorProto(error_str);
-}
-
-std::string JobBuildAndInferCtx_GetCurrentJobName(std::string* error_str) {
-  return oneflow::JobBuildAndInferCtx_GetCurrentJobName().GetDataAndSerializedErrorProto(
-      error_str, std::string(""));
-}
-
-void JobBuildAndInferCtx_Close(std::string* error_str) {
-  return oneflow::JobBuildAndInferCtx_Close().GetDataAndSerializedErrorProto(error_str);
-}
-
-void CurJobBuildAndInferCtx_CheckJob(std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_CheckJob().GetDataAndSerializedErrorProto(error_str);
-}
-
-void CurJobBuildAndInferCtx_SetTrainConf(const std::string& serialized_train_conf,
-                                         std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_SetTrainConf(serialized_train_conf)
-      .GetDataAndSerializedErrorProto(error_str);
-}
-
-void CurJobBuildAndInferCtx_Complete(std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_Complete().GetDataAndSerializedErrorProto(error_str);
-}
-
-bool CurJobBuildAndInferCtx_HasJobConf(std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_HasJobConf().GetDataAndSerializedErrorProto(error_str,
-                                                                                     false);
-}
-
-std::string CurJobBuildAndInferCtx_AddAndInferMirroredOp(const std::string& serialized_op_conf,
-                                                         std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_AddAndInferMirroredOp(serialized_op_conf)
-      .GetDataAndSerializedErrorProto(error_str, std::string(""));
-}
-
-std::string CurJobBuildAndInferCtx_AddAndInferConsistentOp(const std::string& serialized_op_conf,
-                                                           std::string* error_str) {
-  return oneflow::CurJobBuildAndInferCtx_AddAndInferConsistentOp(serialized_op_conf)
-      .GetDataAndSerializedErrorProto(error_str, std::string(""));
-}
-
 void CurJobBuildAndInferCtx_AddLossLogicalBlobName(const std::string& lbn, std::string* error_str) {
   return oneflow::CurJobBuildAndInferCtx_AddLossLogicalBlobName(lbn).GetDataAndSerializedErrorProto(
       error_str);

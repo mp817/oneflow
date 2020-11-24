@@ -155,22 +155,21 @@ def LaunchJob(job_instance):
 
 def JobBuildAndInferCtx_Open(job_name):
     job_name = str(job_name)
-    error_str = oneflow_internal.JobBuildAndInferCtx_Open(job_name)
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    error = oneflow_api.JobBuildAndInferCtx_Open(job_name)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
 
 
 def JobBuildAndInferCtx_GetCurrentJobName():
-    job_name, error_str = oneflow_internal.JobBuildAndInferCtx_GetCurrentJobName()
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
-    return job_name
+    job_name, error = oneflow_api.JobBuildAndInferCtx_GetCurrentJobName()
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
 
 
 def JobBuildAndInferCtx_Close():
-    oneflow_internal.JobBuildAndInferCtx_Close()
+    error = oneflow_api.JobBuildAndInferCtx_Close()
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
 
 
 def CurJobBuildAndInferCtx_SetJobConf(job_config_proto):
@@ -180,22 +179,18 @@ def CurJobBuildAndInferCtx_SetJobConf(job_config_proto):
         raise JobBuildAndInferCfgError(error)
 
 
-
 def CurJobBuildAndInferCtx_SetTrainConf(train_config_proto):
     serialized_train_conf = str(text_format.MessageToString(train_config_proto))
-    error_str = oneflow_internal.CurJobBuildAndInferCtx_SetTrainConf(
-        serialized_train_conf
-    )
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    error = oneflow_api.CurJobBuildAndInferCtx_SetTrainConf(serialized_train_conf)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
 
 
 def CurJobBuildAndInferCtx_Complete():
-    error_str = oneflow_internal.CurJobBuildAndInferCtx_Complete()
+    error = oneflow_api.CurJobBuildAndInferCtx_Complete()
     error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
 
 
 def InferOpConf(op_conf_proto, upstream_signature):
@@ -248,21 +243,19 @@ def CheckAndCompleteUserOpConf(op_conf_proto):
 
 def CurJobBuildAndInferCtx_AddAndInferConsistentOp(op_conf_proto):
     serialized_op_conf = str(text_format.MessageToString(op_conf_proto))
-    add_and_infer = oneflow_internal.CurJobBuildAndInferCtx_AddAndInferConsistentOp
-    op_attribute_str, error_str = add_and_infer(serialized_op_conf)
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    add_and_infer = oneflow_api.CurJobBuildAndInferCtx_AddAndInferConsistentOp
+    op_attribute_str, error = add_and_infer(serialized_op_conf)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
     return text_format.Parse(op_attribute_str, op_attribute_pb.OpAttribute())
 
 
 def CurJobBuildAndInferCtx_AddAndInferMirroredOp(op_conf_proto):
     serialized_op_conf = str(text_format.MessageToString(op_conf_proto))
-    add_and_infer = oneflow_internal.CurJobBuildAndInferCtx_AddAndInferMirroredOp
-    op_attribute_str, error_str = add_and_infer(serialized_op_conf)
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    add_and_infer = oneflow_api.CurJobBuildAndInferCtx_AddAndInferMirroredOp
+    op_attribute_str, error = add_and_infer(serialized_op_conf)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
     return text_format.Parse(op_attribute_str, op_attribute_pb.OpAttribute())
 
 
@@ -285,17 +278,16 @@ def CurJobBuildAndInferCtx_AddLbiAndDiffWatcherUuidPair(lbi_and_uuid):
 
 
 def CurJobBuildAndInferCtx_CheckJob():
-    error_str = oneflow_internal.CurJobBuildAndInferCtx_CheckJob()
-    error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    error = oneflow_api.CurJobBuildAndInferCtx_CheckJob()
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
 
 
 def CurJobBuildAndInferCtx_HasJobConf():
-    has_job_conf, error_str = oneflow_internal.CurJobBuildAndInferCtx_HasJobConf()
+    has_job_conf, error = oneflow_api.CurJobBuildAndInferCtx_HasJobConf()
     error = text_format.Parse(error_str, error_util.ErrorProto())
-    if error.HasField("error_type"):
-        raise JobBuildAndInferError(error)
+    if error.has_error_type():
+        raise JobBuildAndInferCfgError(error)
     return has_job_conf
 
 
@@ -439,7 +431,7 @@ def JobBuildAndInferCtx_MirroredBlobGetParallelConfFromProducerView(job_name, lb
         oneflow_api.JobBuildAndInferCtx_MirroredBlobGetSerializedParallelConfFromProducerView
     )
     parallel_conf_str, error = GetParallelConf(job_name, lbn)
-    if error.error.has_error_type():
+    if error.has_error_type():
         raise JobBuildAndInferCfgError(error)
     return text_format.Parse(parallel_conf_str, placement_pb.ParallelConf())
 
@@ -538,20 +530,17 @@ def JobBuildAndInferCtx_GetParallelConfFromProducerView(job_name, lbn):
         oneflow_api.JobBuildAndInferCtx_GetSerializedParallelConfFromProducerView
     )
     parallel_conf, error = GetParallelConf(job_name, lbn)
-    if error.error.has_error_type():
+    if error.has_error_type():
         raise JobBuildAndInferCfgError(error)
     return text_format.Parse(parallel_conf, placement_pb.ParallelConf())
 
 
 def GetMachine2DeviceIdListOFRecordFromParallelConf(parallel_conf):
     serialized_parallel_conf = str(text_format.MessageToString(parallel_conf))
-    (
-        ofrecord,
-        error,
-    ) = oneflow_api.GetMachine2DeviceIdListOFRecordFromParallelConf(
+    (ofrecord, error,) = oneflow_api.GetMachine2DeviceIdListOFRecordFromParallelConf(
         serialized_parallel_conf
     )
-    if error.error.has_error_type():
+    if error.has_error_type():
         raise JobBuildAndInferCfgError(error)
     return text_format.Parse(ofrecord, record_util.OFRecord())
 
